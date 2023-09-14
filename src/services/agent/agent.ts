@@ -1,5 +1,6 @@
 import { Agent__factory, Burner__factory } from '../../generated'
 import {
+  AGENT_PROXY_CONTRACT_ADDRESS,
   BURNER_CONTRACT_ADDRESS,
   REQUEST_BURN_MY_STETH_ROLE,
 } from '../../constants/constants'
@@ -19,14 +20,19 @@ export class AgentService {
           address: BURNER_CONTRACT_ADDRESS,
           calldata: Burner__factory.createInterface().encodeFunctionData(
             'grantRole',
-            [REQUEST_BURN_MY_STETH_ROLE, this.agentAddress]
+            [REQUEST_BURN_MY_STETH_ROLE, this.agentAddress],
           ),
         },
       ],
     }
 
-    return Agent__factory.createInterface().encodeFunctionData('forward', [
-      evm.serialize(em),
-    ])
+    return evm.serialize({
+      calls: [
+        {
+          address: AGENT_PROXY_CONTRACT_ADDRESS,
+          calldata: Agent__factory.createInterface().encodeFunctionData('forward', [evm.serialize(em)]),
+        },
+      ],
+    })
   }
 }

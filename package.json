@@ -1,0 +1,47 @@
+{
+  "name": "omnibus-test",
+  "version": "0.0.1",
+  "author": "Sergey White",
+  "private": true,
+  "license": "MIT",
+  "scripts": {
+    "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
+    "build": "tsc --build",
+    "start": "node dist/src/index.js",
+    "start:dev": "ts-node src/index.ts",
+    "lint": "eslint \"{src,apps,libs,test}/**/*.ts\" --fix"
+  },
+  "dependencies": {
+    "@typechain/ethers-v6": "^0.5.0",
+    "@typechain/hardhat": "^9.0.0",
+    "dotenv": "^16.3.1",
+    "ethers": "^6.7.1"
+  },
+  "devDependencies": {
+    "@nomicfoundation/hardhat-chai-matchers": "^2.0.2",
+    "@nomicfoundation/hardhat-ethers": "^3.0.4",
+    "@nomicfoundation/hardhat-network-helpers": "^1.0.9",
+    "@nomicfoundation/hardhat-toolbox": "^3.0.0",
+    "@nomicfoundation/hardhat-verify": "^1.1.1",
+    "@types/chai": "^4.3.6",
+    "@types/mocha": "^10.0.1",
+    "@types/node": "^20.5.9",
+    "@types/supertest": "^2.0.11",
+    "@typescript-eslint/eslint-plugin": "^5.10.0",
+    "@typescript-eslint/parser": "^5.10.0",
+    "chai": "^4.3.8",
+    "eslint": "^8.7.0",
+    "eslint-config-prettier": "^8.3.0",
+    "eslint-plugin-prettier": "^4.0.0",
+    "hardhat": "^2.17.2",
+    "hardhat-gas-reporter": "^1.0.9",
+    "prettier": "^2.5.1",
+    "solidity-coverage": "^0.8.4",
+    "supertest": "^6.2.1",
+    "ts-loader": "^9.2.6",
+    "ts-node": "^10.4.0",
+    "tsconfig-paths": "^3.12.0",
+    "typechain": "^8.3.1",
+    "typescript": "^4.5.4"
+  }
+}

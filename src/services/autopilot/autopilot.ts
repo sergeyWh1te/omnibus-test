@@ -5,7 +5,7 @@ export class AutopilotSrv {
   private readonly autopilotAddress: string
   private ethClient: EthClient
 
-  constructor(autopilotAddress: string, ethClient: EthClient) {
+  constructor(ethClient: EthClient, autopilotAddress: string) {
     this.autopilotAddress = autopilotAddress
     this.ethClient = ethClient
   }

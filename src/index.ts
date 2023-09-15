@@ -16,6 +16,7 @@ import { VoteController } from './handlers/vote/vote'
 import { AgentService } from './services/agent/agent'
 import { BurnerService } from './services/burner/burner'
 import { FundController } from './handlers/fund/fund'
+import { OmibusMock_2023_06_20 } from './handlers/vote/mocks/2023_06_20'
 
 const ETH_BALANCE = 10n * 10n ** 18n // 10 ETH
 const LDO_BALANCE = 10n ** 18n // 1 LDO
@@ -28,8 +29,8 @@ async function main() {
 
   const agentSrv = new AgentService(AGENT_PROXY_CONTRACT_ADDRESS)
   const whaleSrv = new WhaleSrv(ethClient, LDO_WHALE_ADDRESS)
-  const autopilotSrv = new AutopilotSrv(AUTOPILOT_ADDRESS, ethClient)
-  const fundCtrl = new FundController(whaleSrv, ethClient)
+  const autopilotSrv = new AutopilotSrv(ethClient, AUTOPILOT_ADDRESS)
+  const fundCtrl = new FundController(ethClient, whaleSrv)
 
   const autopilotSigner = await autopilotSrv.getSigner()
 
@@ -60,17 +61,13 @@ async function main() {
 
   console.table(balances)
 
-  const evmScript = agentSrv.getGrantRoleEVMscript()
-
+  const evmScript = agentSrv.batch(OmibusMock_2023_06_20.getEvmScripts())
   const [voteId, receipt] = await voteCtr.startVote(evmScript)
   await voteCtr.vote(voteId)
   await voteCtr.skipTime()
-  // await ethClient.mine();
   const r = await voteCtr.passVote(voteId)
 
-  // await fundCtrl.fundETH(LDO_WHALE_ADDRESS, backupWhaleETHBalance)
-
-  console.log(' r: ', r)
+  console.log('r: ', r)
 
   await checkRole()
 }

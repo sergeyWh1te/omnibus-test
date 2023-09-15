@@ -4,7 +4,6 @@ import { MINITOKEN_CONTRACT_ADDRESS } from '../../constants/constants'
 import { MiniMeToken__factory } from '../../generated'
 import { IWhaleService } from './interface'
 
-const UnlimitedETH = 100n * 10n ** 18n
 export class WhaleSrv implements IWhaleService {
   private ethClient: EthClient
   private readonly whaleLDOAddress: string

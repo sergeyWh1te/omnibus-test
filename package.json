@@ -5,10 +5,10 @@
   "private": true,
   "license": "MIT",
   "scripts": {
-    "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
     "build": "tsc --build",
     "start": "node dist/src/index.js",
     "start:dev": "ts-node src/index.ts",
+    "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
     "lint": "eslint \"{src,apps,libs,test}/**/*.ts\" --fix"
   },
   "dependencies": {

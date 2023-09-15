@@ -6,7 +6,7 @@ import { EthClient } from '../../clients/eth_client_interface'
 export class FundController {
   private whaleSrv: WhaleSrv
   private ethClient: EthClient
-  constructor(whaleSrv: WhaleSrv, ethClient: EthClient) {
+  constructor(ethClient: EthClient, whaleSrv: WhaleSrv) {
     this.whaleSrv = whaleSrv
     this.ethClient = ethClient
   }

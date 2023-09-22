@@ -1,35 +1,18 @@
-import { Agent__factory, Burner__factory } from '../../generated'
-import {
-  AGENT_PROXY_CONTRACT_ADDRESS,
-  BURNER_CONTRACT_ADDRESS,
-  REQUEST_BURN_MY_STETH_ROLE,
-} from '../../constants/constants'
+import { Agent__factory } from '../../generated'
 import evm, { ParsedEvmScript } from '../../utils/evm/evm'
 
 export class AgentService {
-  private readonly agentAddress: string
+  private readonly agentProxyAddress: string
 
   constructor(agentAddress: string) {
-    this.agentAddress = agentAddress
+    this.agentProxyAddress = agentAddress
   }
 
-  public getGrantRoleEVMscript(): string {
-    const em: ParsedEvmScript = {
-      calls: [
-        {
-          address: BURNER_CONTRACT_ADDRESS,
-          calldata: Burner__factory.createInterface().encodeFunctionData(
-            'grantRole',
-            [REQUEST_BURN_MY_STETH_ROLE, this.agentAddress]
-          ),
-        },
-      ],
-    }
-
+  public single(em: ParsedEvmScript): string {
     return evm.serialize({
       calls: [
         {
-          address: AGENT_PROXY_CONTRACT_ADDRESS,
+          address: this.agentProxyAddress,
           calldata: Agent__factory.createInterface().encodeFunctionData(
             'forward',
             [evm.serialize(em)]
@@ -44,13 +27,14 @@ export class AgentService {
       calls: [],
     }
 
+    const agentFactory = Agent__factory.createInterface()
+
     for (const e of evmScripts) {
       out.calls.push({
-        address: this.agentAddress,
-        calldata: Agent__factory.createInterface().encodeFunctionData(
-          'forward',
-          [evm.serialize(e)]
-        ),
+        address: this.agentProxyAddress,
+        calldata: agentFactory.encodeFunctionData('forward', [
+          evm.serialize(e),
+        ]),
       })
     }
 

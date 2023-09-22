@@ -1,7 +1,8 @@
 import { JsonRpcSigner } from 'ethers'
 import { EthClient } from '../../clients/eth_client_interface'
+import { IAutopilotSrv } from './interface'
 
-export class AutopilotSrv {
+export class AutopilotSrv implements IAutopilotSrv {
   private readonly autopilotAddress: string
   private ethClient: EthClient
 
@@ -9,7 +10,7 @@ export class AutopilotSrv {
     this.autopilotAddress = autopilotAddress
     this.ethClient = ethClient
   }
-  public async getSigner(): Promise<JsonRpcSigner> {
+  public getSigner(): JsonRpcSigner {
     return new JsonRpcSigner(
       this.ethClient.getProvider(),
       this.autopilotAddress

@@ -6,5 +6,4 @@ export abstract class EthClient {
   abstract getProvider(): JsonRpcProvider
   abstract skipTimeInSeconds(seconds: number | bigint): Promise<void>
   abstract mine(): Promise<void>
-  abstract getLDOBalance(address: string): Promise<bigint>
 }

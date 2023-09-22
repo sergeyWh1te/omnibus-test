@@ -1,24 +1,27 @@
-import { BigNumberish, ContractTransactionReceipt, JsonRpcSigner } from 'ethers'
+import { BigNumberish, ContractTransactionReceipt } from 'ethers'
 import { TokenManager__factory, Voting__factory } from '../../generated'
-import { TOKEN_MANAGER_PROXY_CONTRACT_ADDRESS } from '../../constants/constants'
 import evm from '../../utils/evm/evm'
 import { IWhaleService } from '../../services/whale/interface'
 import { EthClient } from '../../clients/eth_client_interface'
+import { IAutopilotSrv } from '../../services/autopilot/interface'
 
 export class VoteController {
-  private readonly autopilotSigner: JsonRpcSigner
-  private readonly voteAddress: string
+  private readonly tokenManagerProxyContractAddress: string
+  private readonly autopilotSrv: IAutopilotSrv
+  private readonly voteProxyAddress: string
   private readonly whaleSrv: IWhaleService
   private readonly ethClient: EthClient
 
   constructor(
-    autopilotSigner: JsonRpcSigner,
-    voteAddress: string,
+    autopilotSrv: IAutopilotSrv,
+    voteProxyAddress: string,
+    tokenManagerProxyContractAddress: string,
     whaleSrv: IWhaleService,
     ethClient: EthClient
   ) {
-    this.autopilotSigner = autopilotSigner
-    this.voteAddress = voteAddress
+    this.autopilotSrv = autopilotSrv
+    this.voteProxyAddress = voteProxyAddress
+    this.tokenManagerProxyContractAddress = tokenManagerProxyContractAddress
     this.whaleSrv = whaleSrv
     this.ethClient = ethClient
   }
@@ -27,8 +30,8 @@ export class VoteController {
     serializedEvmScript: string
   ): Promise<[number, ContractTransactionReceipt]> {
     const TokenManager = TokenManager__factory.connect(
-      TOKEN_MANAGER_PROXY_CONTRACT_ADDRESS,
-      this.autopilotSigner
+      this.tokenManagerProxyContractAddress,
+      this.autopilotSrv.getSigner()
     )
 
     const voteInterface = Voting__factory.createInterface()
@@ -36,7 +39,7 @@ export class VoteController {
     const voteEvmScript = evm.serialize({
       calls: [
         {
-          address: this.voteAddress,
+          address: this.voteProxyAddress,
           calldata: voteInterface.encodeFunctionData(
             'newVote(bytes,string,bool,bool)',
             [serializedEvmScript, 'TODO: Add a description', false, false]
@@ -74,7 +77,7 @@ export class VoteController {
   public async vote(voteId: BigNumberish): Promise<void> {
     const whaleRunner = this.whaleSrv.getSigner()
 
-    await Voting__factory.connect(this.voteAddress, whaleRunner).vote(
+    await Voting__factory.connect(this.voteProxyAddress, whaleRunner).vote(
       voteId,
       true,
       false
@@ -87,7 +90,7 @@ export class VoteController {
     const whaleRunner = this.whaleSrv.getSigner()
 
     const tx = await Voting__factory.connect(
-      this.voteAddress,
+      this.voteProxyAddress,
       whaleRunner
     ).executeVote(voteId, {
       gasLimit: 5_000_000,

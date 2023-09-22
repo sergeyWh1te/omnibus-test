@@ -1,22 +1,53 @@
-import 'dotenv/config'
+import * as dotenv from 'dotenv'
+import * as E from 'fp-ts/Either'
+import { ZodError } from 'zod'
+import fs from 'fs'
+import { Config, DotEnvSchema } from './entity/config'
+import { DeployedConfig, DeployedConfigSchema } from './entity/deployed_config'
+import { DotenvConfigOutput } from 'dotenv'
 
-const DEFAULT_LOCAL_RPC_URL = 'http://127.0.0.1:8545'
+function loadDeploydConfig(
+  relativePathToFile: string
+): E.Either<Error | ZodError, DeployedConfig> {
+  let fileContent: string
 
-export function LOCAL_RPC_URL() {
-  return process.env['LOCAL_RPC_URL'] || DEFAULT_LOCAL_RPC_URL
+  try {
+    fileContent = fs.readFileSync(relativePathToFile, 'utf-8')
+  } catch (e: any) {
+    return E.left(e.message)
+  }
+
+  const p = DeployedConfigSchema.safeParse(JSON.parse(fileContent))
+  if (p.success === false) {
+    return E.left(p.error)
+  }
+
+  return E.right(p.data)
 }
-export function RPC_URL() {
-  return process.env['RPC_URL']
-}
 
-export function INFURA_TOKEN() {
-  return process.env['INFURA_TOKEN']
-}
+export function getConfig(): E.Either<Error | ZodError, Config> {
+  let cfg: DotenvConfigOutput
 
-export function ALCHEMY_TOKEN() {
-  return process.env['ALCHEMY_TOKEN']
-}
+  try {
+    cfg = dotenv.config()
+  } catch (e: any) {
+    return E.left(e.message)
+  }
 
-export function ETHERSCAN_TOKEN() {
-  return process.env['ETHERSCAN_TOKEN']
+  const dotEnvCfg = DotEnvSchema.safeParse(cfg.parsed)
+  if (dotEnvCfg.success === false) {
+    return E.left(dotEnvCfg.error)
+  }
+
+  const deployedConfig = loadDeploydConfig(dotEnvCfg.data.NETWORK_STATE_FILE)
+  if (E.isLeft(deployedConfig)) {
+    return E.left(deployedConfig.left)
+  }
+
+  const out: Config = {
+    dotEnvConfig: dotEnvCfg.data,
+    deployedConfig: deployedConfig.right,
+  }
+
+  return E.right(out)
 }

@@ -99,7 +99,7 @@ async function main() {
 
   console.log('r: ', r)
 
-  await checkRole(cfg.right)
+  //await checkRole(cfg.right)
 }
 
 async function checkRole(cfg: Config) {

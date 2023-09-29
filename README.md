@@ -21,3 +21,4 @@
 Summary:
 * The entry point into app is `src/index.ts::main` 
 * The repository is written with the clean code principle illustrated by Robin Martin at `Clean Architecture in Chapter 13
+* Omnibuses locate here `src/handlers/vote/mocks/2023_06_20.ts` for future development, we can make a copy or extend or etc.

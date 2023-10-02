@@ -5,17 +5,7 @@
  * */
 import * as z from 'zod'
 
-export const HoldersSchema = z.object({
-  '0xb4124cEB3451635DAcedd11767f004d8a28c6eE7': z.string(),
-  '0x8401Eb5ff34cc943f096A32EF3d5113FEbE8D4Eb': z.string(),
-  '0x306469457266CBBe7c0505e8Aad358622235e768': z.string(),
-  '0xd873F6DC68e3057e4B7da74c6b304d0eF0B484C7': z.string(),
-  '0xDcC5dD922fb1D0fd0c450a0636a8cE827521f0eD': z.string(),
-  '0x27E9727FD9b8CdDdd0854F56712AD9DF647FaB74': z.string(),
-  '0x9766D2e7FFde358AD0A40BB87c4B88D9FAC3F4dd': z.string(),
-  '0xBd7055AB500cD1b0b0B14c82BdBe83ADCc2e8D06': z.string(),
-  '0xe8898A4E589457D979Da4d1BDc35eC2aaf5a3f8E': z.string(),
-})
+export const HoldersSchema = z.object({})
 export type Holders = z.infer<typeof HoldersSchema>
 
 export const VestingParamsSchema = z.object({
@@ -48,7 +38,7 @@ export type ValidatorsExitBusOracle = z.infer<
 
 export const NodeOperatorsRegistryParametersSchema = z.object({
   stakingModuleTypeId: z.string(),
-  stuckPenaltyDelay: z.string(),
+  stuckPenaltyDelay: z.number(),
 })
 export type NodeOperatorsRegistryParameters = z.infer<
   typeof NodeOperatorsRegistryParametersSchema
@@ -88,7 +78,6 @@ export type Token = z.infer<typeof TokenSchema>
 export const FeeSchema = z.object({
   totalPercent: z.number(),
   treasuryPercent: z.number(),
-  insurancePercent: z.number(),
   nodeOperatorsPercent: z.number(),
 })
 export type Fee = z.infer<typeof FeeSchema>
@@ -103,7 +92,7 @@ export type DaoInitialSettings = z.infer<typeof DaoInitialSettingsSchema>
 export const ChainSpecSchema = z.object({
   slotsPerEpoch: z.number(),
   secondsPerSlot: z.number(),
-  genesisTime: z.string(),
+  genesisTime: z.number(),
   depositContract: z.string(),
 })
 export type ChainSpec = z.infer<typeof ChainSpecSchema>
@@ -190,7 +179,6 @@ export const AccountingOracleSchema = z.object({
 export type AccountingOracle = z.infer<typeof AccountingOracleSchema>
 
 export const DeployedConfigSchema = z.object({
-  ipfsAPI: z.string(),
   multisigAddress: z.string(),
   owner: z.string(),
   gateSealAddress: z.string(),
@@ -211,7 +199,7 @@ export const DeployedConfigSchema = z.object({
   nodeOperatorsRegistry: NodeOperatorsRegistrySchema,
   withdrawalQueueERC721: BurnerSchema,
   networkId: z.number(),
-  chainId: z.string(),
+  chainId: z.number(),
   aragonEnsLabelName: z.string(),
   ensAddress: z.string(),
   ensFactoryAddress: z.string(),

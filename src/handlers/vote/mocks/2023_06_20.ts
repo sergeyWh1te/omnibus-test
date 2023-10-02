@@ -6,29 +6,13 @@ import { Config } from '../../../utils/env/entity/config'
 const INSURANCE_STETH_AMOUNT = parseEther('13.45978634')
 const LDO_BALANCE = 10n ** 18n // 1 LDO
 
-export class OmibusMock_2023_06_20 {
+export class OmnibusMock_2023_06_20 {
 
   public static getEvmScripts(cfg: Config): ParsedEvmScript[] {
     const dotEnvCfg = cfg.dotEnvConfig
     const deployedCfg = cfg.deployedConfig
 
     const out: ParsedEvmScript[] = [
-      /*{
-        calls: [
-          {
-            address: dotEnvCfg.INSURANCE_CONTRACT_ADDRESS,
-            calldata:
-              InsuranceFund__factory.createInterface().encodeFunctionData(
-                'transferERC20',
-                [
-                  deployedCfg['app:lido'].proxyAddress,
-                  deployedCfg['app:aragon-agent'].proxyAddress,
-                  INSURANCE_STETH_AMOUNT,
-                ]
-              ),
-          },
-        ],
-      },
       {
         calls: [
           {
@@ -42,23 +26,23 @@ export class OmibusMock_2023_06_20 {
             ),
           },
         ],
-      },*/
-      {
-        calls: [
-          {
-            address: deployedCfg['app:aragon-finance'].proxyAddress,
-            calldata: Finance__factory.createInterface().encodeFunctionData(
-              'newImmediatePayment',
-              [
-                deployedCfg.daoTokenAddress,
-                dotEnvCfg.AUTOPILOT_ADDRESS,
-                LDO_BALANCE,
-                'reference',
-              ]
-            ),
-          },
-        ],
-      }
+      },
+      // {
+      //   calls: [
+      //     {
+      //       address: deployedCfg['app:aragon-finance'].proxyAddress,
+      //       calldata: Finance__factory.createInterface().encodeFunctionData(
+      //         'newImmediatePayment',
+      //         [
+      //           deployedCfg.daoTokenAddress,
+      //           dotEnvCfg.AUTOPILOT_ADDRESS,
+      //           LDO_BALANCE,
+      //           'reference',
+      //         ]
+      //       ),
+      //     },
+      //   ],
+      // }
     ]
 
     return out

@@ -6,7 +6,7 @@ import { Config, DotEnvSchema } from './entity/config'
 import { DeployedConfig, DeployedConfigSchema } from './entity/deployed_config'
 import { DotenvConfigOutput } from 'dotenv'
 
-function loadDeploydConfig(
+function loadDeployedConfig(
   relativePathToFile: string
 ): E.Either<Error | ZodError, DeployedConfig> {
   let fileContent: string
@@ -39,7 +39,7 @@ export function getConfig(): E.Either<Error | ZodError, Config> {
     return E.left(dotEnvCfg.error)
   }
 
-  const deployedConfig = loadDeploydConfig(dotEnvCfg.data.NETWORK_STATE_FILE)
+  const deployedConfig = loadDeployedConfig(dotEnvCfg.data.NETWORK_STATE_FILE)
   if (E.isLeft(deployedConfig)) {
     return E.left(deployedConfig.left)
   }

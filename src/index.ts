@@ -6,7 +6,7 @@ import { AutopilotSrv } from './services/autopilot/autopilot'
 import { VoteController } from './handlers/vote/vote'
 import { AgentService } from './services/agent/agent'
 import { BurnerService } from './services/burner/burner'
-import { OmibusMock_2023_06_20 } from './handlers/vote/mocks/2023_06_20'
+import { OmnibusMock_2023_06_20 } from './handlers/vote/mocks/2023_06_20'
 import * as E from 'fp-ts/Either'
 import * as process from 'process'
 import { Config } from './utils/env/entity/config'
@@ -91,7 +91,7 @@ async function main() {
 
   console.table(balances)
 
-  const evmScript = agentSrv.batch(OmibusMock_2023_06_20.getEvmScripts(config))
+  const evmScript = agentSrv.batch(OmnibusMock_2023_06_20.getEvmScripts(config))
   const [voteId, receipt] = await voteCtr.startVote(evmScript)
   await voteCtr.vote(voteId)
   await voteCtr.skipTime()
